@@ -4806,7 +4806,7 @@ Warning:
     //
 
     PAGED_CODE();
-
+    
     do {
 
         //
@@ -5521,6 +5521,7 @@ Warning:
             openPacket->EaBuffer = (PVOID) NULL;
             openPacket->EaLength = 0L;
         }
+        
     }
 
     //
@@ -7876,6 +7877,9 @@ Return Value
 
     *DesiredAccess = 0;
     ObjectHeader = OBJECT_TO_OBJECT_HEADER(FileObject);
+
+    
+    
 
     if (ObjectHeader->Type == IoFileObjectType) {
 

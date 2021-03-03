@@ -420,7 +420,8 @@ Return Value:
             RequestLength += 256;
 
             KeyValueInformation = (PKEY_VALUE_FULL_INFORMATION)
-                                  ExAllocatePoolWithTag(PagedPool,
+          
+                (PagedPool,
                                                         RequestLength,
                                                         ' taF');
 

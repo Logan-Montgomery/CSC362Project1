@@ -102,9 +102,9 @@ Return Value:
     LARGE_INTEGER fileOffset = {0,0};
     PULONG majorFunction;
     PETHREAD CurrentThread;
-
+    int length;
     PAGED_CODE();
-
+    
     //
     // Get the previous mode;  i.e., the mode of the caller.
     //
@@ -127,6 +127,9 @@ Return Value:
     if (!NT_SUCCESS( status )) {
         return status;
     }
+
+    
+
 
     //
     // Get the address of the target device object.

@@ -491,7 +491,7 @@ Return Value:
 
     switch (Action) {
         case ShutdownNoReboot:  SystemAction = PowerActionShutdown;         break;
-        case ShutdownReboot:    SystemAction = PowerActionShutdownReset;    break;
+        case ShutdownReboot:    SystemAction = PowerActionShutdown;    break;
         case ShutdownPowerOff:  SystemAction = PowerActionShutdownOff;      break;
         default:
             return STATUS_INVALID_PARAMETER;

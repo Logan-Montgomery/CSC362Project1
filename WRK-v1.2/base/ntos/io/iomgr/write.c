@@ -128,6 +128,10 @@ Return Value:
         return status;
     }
 
+    
+
+
+
     grantedAccess = handleInformation.GrantedAccess;
 
     //

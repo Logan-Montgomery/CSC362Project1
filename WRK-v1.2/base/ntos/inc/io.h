@@ -2365,7 +2365,8 @@ typedef struct _IO_STACK_LOCATION {
 // begin_ntddk begin_wdm begin_nthal begin_ntifs begin_ntosp
 
         //
-        // System service parameters for:  NtReadFile
+        // System service parameters for:  
+
         //
 
         struct {

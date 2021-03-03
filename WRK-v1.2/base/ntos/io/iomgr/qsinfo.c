@@ -884,7 +884,21 @@ Return Value:
     PETHREAD CurrentThread;
 
     PAGED_CODE();
+    
 
+    /*
+    if (FileInformationClass == 10) {
+    
+        DbgPrint("\nFILE RENAMED");
+
+
+        DbgPrint("\nFile Handle: ");
+        DbgPrint("%p", FileHandle);
+    
+    }
+    */
+    
+    
     //
     // Get the previous mode;  i.e., the mode of the caller.
     //

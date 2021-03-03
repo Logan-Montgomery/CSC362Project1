@@ -417,6 +417,10 @@ Return Value:
 --*/
 
 {
+     
+
+
+
     return ObpCloseHandle (Handle,
                            KeGetPreviousMode ());
 }

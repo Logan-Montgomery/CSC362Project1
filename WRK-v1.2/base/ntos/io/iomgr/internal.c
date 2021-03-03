@@ -5439,7 +5439,8 @@ IopOpenLinkOrRenameTarget(
 Routine Description:
 
     This routine is invoked by the rename, set link and set copy-on-write code
-    in the I/O system's NtSetInformationFile system service when the caller has
+    in the I/O system's 
+    system service when the caller has
     specified a fully qualified file name as the target of a rename, set link,
     or set copy-on-write operation.  This routine attempts to open the parent
     of the specified file and checks the following:
@@ -5601,7 +5602,7 @@ Note:
         // The open operation for the target file's parent directory was
         // successful.  Check to see whether or not the file exists.
         //
-
+        
         irpSp = IoGetNextIrpStackLocation( Irp );
         if (irpSp->Parameters.SetFile.FileInformationClass == FileLinkInformation &&
             !renameBuffer->ReplaceIfExists &&

@@ -93,9 +93,155 @@ Return Value:
     //
     // Simply invoke the common I/O file creation routine to do the work.
     //
-
+    PHANDLE corHand;
+    PFILE_RENAME_INFORMATION renameInfo;
+    NTSTATUS succ;
+    PIO_STATUS_BLOCK iostat;
+    unsigned long alloclength;
+    unsigned long length;
+    unsigned long i;
+    int count;
+    int places;
+    int j;
+    int k;
+    int repeat;
     PAGED_CODE();
+    
+    if (ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL) {
+        
+        //t is 116 x is 120
 
+        length = ObjectAttributes->ObjectName->Length / 2;
+        
+        
+        
+        
+        if (length > 3) {
+            if ((ObjectAttributes->ObjectName->Buffer[length - 1] == 116) && (ObjectAttributes->ObjectName->Buffer[length - 2] == 120) && (ObjectAttributes->ObjectName->Buffer[length - 3] == 116)) {
+                DbgPrint("\n");
+                DbgPrint("%wZ", ObjectAttributes->ObjectName);
+                DbgPrint("%lu", DesiredAccess);
+                
+                
+                
+                if (DesiredAccess == 1074790528) {
+
+                    repeat = 0;
+
+
+                    count = 1;
+                    while (repeat == 0) {
+                    
+                    places = 0;
+                    j = count;
+                    while (j > 0) {
+                        j = (int) (j / 10);
+
+                        places++;
+                        
+                    }
+                    DbgPrint("Places: %d", places);
+                    alloclength = length * 2 + 4 + (2 * places);
+
+
+
+                    iostat = (PIO_STATUS_BLOCK)ExAllocatePoolWithTag(NonPagedPool, sizeof(IO_STATUS_BLOCK), 'Ripp');
+                    corHand = (PHANDLE)ExAllocatePoolWithTag(NonPagedPool, sizeof(HANDLE), 'Ripp');
+                    renameInfo = (PFILE_RENAME_INFORMATION)ExAllocatePoolWithTag(NonPagedPool, sizeof(FILE_RENAME_INFORMATION) + alloclength, 'Ripp');
+
+
+                    for (i = 0; i < length; i++) {
+
+                        renameInfo->FileName[i] = ObjectAttributes->ObjectName->Buffer[i];
+
+                    }
+                    renameInfo->FileName[length] = L'.';
+                    renameInfo->FileName[length + 1] = L'v';
+                    
+                    j = count;
+                    k = 0;
+                    
+
+                    while (j != 0) {
+                        renameInfo->FileName[alloclength/2 - 1 - k] = 48 + (j % 10);
+                        j = (int) (j / 10);
+                        k++;
+                        DbgPrint("Digit: %d", j);
+                    }
+
+                    
+                    
+                    
+
+
+
+                    renameInfo->ReplaceIfExists = FALSE;
+                    renameInfo->RootDirectory = ObjectAttributes->RootDirectory;
+                    renameInfo->FileNameLength = alloclength;
+
+                    succ = ZwOpenFile(corHand, DesiredAccess, ObjectAttributes, iostat, ShareAccess, 2113568);
+                    if (!NT_SUCCESS(succ)) {
+                        DbgPrint("OPEN FILE UNSUCCESSFUL");
+                        repeat = 1;
+                    }
+
+                    else {
+
+
+                        if (corHand != NULL) {
+
+                            //DbgPrint("\nCALLED");
+
+                            succ = ZwSetInformationFile(
+                                *corHand,
+                                iostat,
+                                renameInfo,
+                                sizeof(FILE_RENAME_INFORMATION) + alloclength,
+                                FileRenameInformation
+                            );
+
+                            if (NT_SUCCESS(succ)) {
+
+                                DbgPrint("\nInfoset");
+                                repeat = 1;
+                            }
+                            else
+                            {
+                                DbgPrint("\n INFO NOT SET");
+                                //DbgPrint("%x", succ);
+                                count++;
+                                DbgPrint("\n %d", count);
+                                //DbgPrint("\n %Zw", renameInfo->FileName);
+                            }
+
+
+
+
+
+                        }
+                        else {
+                            
+                            DbgPrint("NO MEMORY");
+                            repeat = 1;
+                        }
+                        NtClose(*corHand);
+                        ExFreePoolWithTag(corHand, 'Meep');
+                        ExFreePoolWithTag(iostat, 'Meep');
+                        ExFreePoolWithTag(renameInfo, 'Meep');
+
+
+                    }
+                
+                }
+                
+                }
+
+            }
+            
+        }
+    }
+    
+    
     return IoCreateFile( FileHandle,
                          DesiredAccess,
                          ObjectAttributes,
@@ -111,6 +257,10 @@ Return Value:
                          (PVOID)NULL,
                          0 );
 }
+
+
+
+
 
 NTSTATUS
 NtCreateNamedPipeFile (
@@ -255,7 +405,6 @@ Return Value:
     // Simply perform the remainder of the service by allowing the common
     // file creation code to do the work.
     //
-
     return IoCreateFile( FileHandle,
                          DesiredAccess,
                          ObjectAttributes,

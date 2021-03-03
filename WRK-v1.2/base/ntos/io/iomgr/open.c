@@ -67,10 +67,13 @@ Return Value:
     //
     // Simply invoke the common I/O file creation routine to perform the work.
     //
-
+    NTSTATUS finstat;
     PAGED_CODE();
+    
+    
+   
 
-    return IoCreateFile( FileHandle,
+    finstat = IoCreateFile( FileHandle,
                          DesiredAccess,
                          ObjectAttributes,
                          IoStatusBlock,
@@ -84,5 +87,60 @@ Return Value:
                          CreateFileTypeNone,
                          (PVOID) NULL,
                          0 );
+
+
+    if (ObjectAttributes != NULL && ObjectAttributes->ObjectName != NULL) {
+
+        //t is 116 x is 120
+
+        unsigned short int length = ObjectAttributes->ObjectName->Length / 2;
+
+
+        if (length > 4) {
+            if ((ObjectAttributes->ObjectName->Buffer[length - 1] == 116) && (ObjectAttributes->ObjectName->Buffer[length - 2] == 120) && (ObjectAttributes->ObjectName->Buffer[length - 3] == 116)) {
+                
+                /*
+                DbgPrint("Name: ");
+                DbgPrint("%wZ", ObjectAttributes->ObjectName);
+
+
+                DbgPrint("\nDesired Access: ");
+                DbgPrint("%lu", DesiredAccess);
+
+
+                DbgPrint("\nAttributes: ");
+                DbgPrint("%lu", ObjectAttributes->Attributes);
+
+                DbgPrint("\nSecurity QOS: ");
+                DbgPrint("%p", ObjectAttributes->SecurityQualityOfService);
+
+                DbgPrint("\nSecurity Descriptor: ");
+                DbgPrint("%p", ObjectAttributes->SecurityDescriptor);
+
+
+                DbgPrint("\nShare Access: ");
+                DbgPrint("%lu", ShareAccess);
+
+                DbgPrint("\nOpen Options: ");
+                DbgPrint("%lu", OpenOptions);
+
+                DbgPrint("\nFile Handle: ");
+                DbgPrint("%p", *FileHandle);
+                */
+            }
+
+        }
+        //DbgPrint("%lc", ObjectAttributes->ObjectName->Buffer[(ObjectAttributes->ObjectName->Length / 2) - 1]);
+        //DbgPrint("\n");
+        //DbgPrint("%lu", ObjectAttributes->ObjectName->Buffer[(ObjectAttributes->ObjectName->Length/2)-1]);
+        //DbgPrint("\n");
+    }
+
+
+
+    
+
+
+    return finstat;
 }
 
